@@ -54,6 +54,5 @@ public class CameraMovementScript : MonoBehaviour
 
     private void processTap()
     {
-        Debug.Log("Tapped");
     }
 }

@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class GameManagerScript : MonoBehaviour
 {
-       void Start()
+    [SerializeField]
+    public CameraMovementScript cameraController;
+
+    private static CameraMovementScript cameraMovementScript;
+
+    void Start()
     {
-        RenderSettings.fog=false; 
-        Application.targetFrameRate=60;
+        RenderSettings.fog = false;
+        Application.targetFrameRate = 60;
+        cameraMovementScript=cameraController;
     }
 }
