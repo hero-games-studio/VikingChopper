@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.UI;
-using Cinemachine;
 
 [RequireComponent(typeof(Animator))]
 public class ThrowController : MonoBehaviour
@@ -26,7 +25,7 @@ public class ThrowController : MonoBehaviour
     [Space]
     [Header("Parameters")]
     public float throwPower = 150;
-    public float cameraZoomOffset = .3f;
+    public float throwLevitate=20;
     [Space]
     [Header("Bools")]
     public bool hasWeapon = true;
@@ -36,14 +35,6 @@ public class ThrowController : MonoBehaviour
     public ParticleSystem catchParticle;
     public ParticleSystem trailParticle;
     public TrailRenderer trailRenderer;
-    [Space]
-    [Header("UI")]
-    public Image reticle;
-
-    [Space]
-    //Cinemachine Shake
-    public CinemachineFreeLook virtualCamera;
-    public CinemachineImpulseSource impulseSource;
 
     void Start()
     {
@@ -54,8 +45,11 @@ public class ThrowController : MonoBehaviour
         weaponScript = weapon.GetComponent<WeaponScript>();
         origLocPos = weapon.localPosition;
         origLocRot = weapon.localEulerAngles;
-        reticle.DOFade(0, 0);
+    }
 
+    public void setAim(bool isAiminig)
+    {
+        animator.SetBool("aiming", isAiminig);
     }
 
     void Update()
@@ -68,16 +62,15 @@ public class ThrowController : MonoBehaviour
         if (hasWeapon)
         {
 
-            if (Input.GetMouseButtonDown(0))
+            if (GameManagerScript.checkTapping())
             {
-                WeaponThrow();
-                animator.SetTrigger("throw");
+                setAim(true);
             }
 
         }
         else
         {
-            if (Input.GetMouseButtonDown(0))
+            if (GameManagerScript.checkTapping())
             {
                 WeaponStartPull();
             }
@@ -95,7 +88,6 @@ public class ThrowController : MonoBehaviour
                 WeaponCatch();
             }
         }
-
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
@@ -104,7 +96,7 @@ public class ThrowController : MonoBehaviour
 
     public void WeaponThrow()
     {
-
+        setAim(false);
         hasWeapon = false;
         weaponScript.activated = true;
         weaponRb.isKinematic = false;
@@ -112,7 +104,8 @@ public class ThrowController : MonoBehaviour
         weapon.parent = null;
         weapon.eulerAngles = new Vector3(0, -90 + transform.eulerAngles.y, 0);
         weapon.transform.position += transform.right / 5;
-        weaponRb.AddForce(Camera.main.transform.forward * throwPower + transform.up * 30, ForceMode.Impulse);
+        weaponRb.useGravity=false;
+        weaponRb.AddForce(Camera.main.transform.forward * throwPower+Vector3.up*throwLevitate, ForceMode.Impulse);
 
         //Trail
         trailRenderer.emitting = true;
@@ -145,10 +138,6 @@ public class ThrowController : MonoBehaviour
         catchParticle.Play();
         trailRenderer.emitting = false;
         trailParticle.Stop();
-
-        //Shake
-        impulseSource.GenerateImpulse(Vector3.right);
-
     }
 
     public Vector3 GetQuadraticCurvePoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
@@ -157,12 +146,5 @@ public class ThrowController : MonoBehaviour
         float tt = t * t;
         float uu = u * u;
         return (uu * p0) + (2 * u * t * p1) + (tt * p2);
-    }
-
-    void CameraOffset(float offset)
-    {
-        virtualCamera.GetRig(0).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset = new Vector3(offset, 1.5f, 0);
-        virtualCamera.GetRig(1).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset = new Vector3(offset, 1.5f, 0);
-        virtualCamera.GetRig(2).GetCinemachineComponent<CinemachineComposer>().m_TrackedObjectOffset = new Vector3(offset, 1.5f, 0);
     }
 }

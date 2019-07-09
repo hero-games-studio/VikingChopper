@@ -15,6 +15,8 @@ public class CameraMovementScript : MonoBehaviour
     private float pressTime = 0f;
     private float tapLimit = 0.15f;
     private bool isCoroutineRunning = false;
+
+    public static bool isTapped = false;
     void Update()
     {
         if (Input.GetMouseButton(0))
@@ -31,11 +33,11 @@ public class CameraMovementScript : MonoBehaviour
             if (isCoroutineRunning)
             {
                 StopCoroutine("processSwirl");
-                isCoroutineRunning=false;
+                isCoroutineRunning = false;
             }
             if (pressTime < tapLimit && pressTime > 0f)
             {
-                processTap();
+                isTapped = true;
             }
             pressTime = 0f;
         }
@@ -50,9 +52,5 @@ public class CameraMovementScript : MonoBehaviour
             playerObject.transform.eulerAngles = playerObject.transform.rotation.eulerAngles + cameraRotation;
             yield return new WaitForSecondsRealtime(1 / 60);
         }
-    }
-
-    private void processTap()
-    {
     }
 }

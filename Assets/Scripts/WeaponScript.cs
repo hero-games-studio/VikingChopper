@@ -21,20 +21,16 @@ public class WeaponScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if(collision.gameObject.layer==10){
+            collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(15, collision.gameObject.transform.position, 30);
+        }
         if (collision.gameObject.layer == 11)
         {
-            print(collision.gameObject.name);
             GetComponent<Rigidbody>().Sleep();
             GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             GetComponent<Rigidbody>().isKinematic = true;
             activated = false;
         }
-
-    }
-
-    //Axe collision with object
-    private void OnTriggerEnter(Collider other)
-    {
 
     }
 }
