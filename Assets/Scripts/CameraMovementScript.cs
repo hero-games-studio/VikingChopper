@@ -13,17 +13,54 @@ public class CameraMovementScript : MonoBehaviour
     private Vector3 cameraRotation;
 
     private float pressTime = 0f;
-    private float tapLimit = 0.15f;
+    private float tapLimit = 0.25f;
     private bool isCoroutineRunning = false;
 
-    public static bool isTapped = false;
+    public static bool isTapped = false; float deltaTime = 0.0f;
+
+
     void Update()
+    {
+#if UNITY_EDITOR
+        mouseProcess();
+#endif
+
+#if UNITY_ANDROID
+        touchProcess();
+#endif
+    }
+    void OnGUI()
+    {
+        int w = Screen.width, h = Screen.height;
+
+        GUIStyle style = new GUIStyle();
+
+        Rect rect = new Rect(0, 0, w, h * 2 / 100);
+        style.alignment = TextAnchor.UpperLeft;
+        style.fontSize = h * 2 / 100;
+        style.normal.textColor = new Color(0.0f, 0.0f, 0.5f, 1.0f);
+        string text = pressTime.ToString();
+        GUI.Label(rect, text, style);
+    }
+
+    private IEnumerator mouseSwirl()
+    {
+        while (true)
+        {
+            float deltaRotation = Input.GetAxis("Mouse X");
+            cameraRotation = new Vector3(0, deltaRotation * cameraRotationSpeedMultiplier, 0);
+            playerObject.transform.eulerAngles = playerObject.transform.rotation.eulerAngles + cameraRotation;
+            yield return new WaitForSecondsRealtime(1 / 60);
+        }
+    }
+
+    private void mouseProcess()
     {
         if (Input.GetMouseButton(0))
         {
             if (!isCoroutineRunning)
             {
-                StartCoroutine("processSwirl");
+                StartCoroutine("mouseSwirl");
                 isCoroutineRunning = true;
             }
             pressTime += Time.deltaTime;
@@ -32,7 +69,7 @@ public class CameraMovementScript : MonoBehaviour
         {
             if (isCoroutineRunning)
             {
-                StopCoroutine("processSwirl");
+                StopCoroutine("mouseSwirl");
                 isCoroutineRunning = false;
             }
             if (pressTime < tapLimit && pressTime > 0f)
@@ -43,14 +80,40 @@ public class CameraMovementScript : MonoBehaviour
         }
     }
 
-    private IEnumerator processSwirl()
+    private Vector2 lastPos;
+    private float touchSpeedMultiplier = 0.08f;
+    private void touchProcess()
     {
-        while (true)
+        if (Input.touchCount > 0)
         {
-            float deltaRotation = Input.GetAxis("Mouse X");
-            cameraRotation = new Vector3(0, deltaRotation * cameraRotationSpeedMultiplier, 0);
+
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                lastPos = touch.position;
+            }
+            float rot = calculateRotation(lastPos, touch.position);
+
+            pressTime += Time.deltaTime;
+            Debug.Log(pressTime);
+            cameraRotation = new Vector3(0, rot * touchSpeedMultiplier, 0);
+            lastPos = touch.position;
             playerObject.transform.eulerAngles = playerObject.transform.rotation.eulerAngles + cameraRotation;
-            yield return new WaitForSecondsRealtime(1 / 60);
         }
+        else if (pressTime < tapLimit && pressTime > 0f && Input.touchCount == 0)
+        {
+            isTapped = true;
+        }
+        else
+        {
+            pressTime = 0f;
+            isTapped = false;
+        }
+    }
+
+    private float calculateRotation(Vector2 beganPos, Vector2 currentPos)
+    {
+        float val = -(beganPos.x - currentPos.x);
+        return val;
     }
 }

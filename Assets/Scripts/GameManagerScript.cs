@@ -15,20 +15,20 @@ public class GameManagerScript : MonoBehaviour
 
     void Start()
     {
-        throwControllerScript = throwController;
-        RenderSettings.fog = false;
-        Application.targetFrameRate = 60;
-        cameraMovementScript = cameraController;
-    }
-
-    public static bool checkTapping()
-    {
-        if (CameraMovementScript.isTapped)
-        {
-            CameraMovementScript.isTapped = false;
-            return true;
+            throwControllerScript = throwController;
+            RenderSettings.fog = false;
+            Application.targetFrameRate = 60;
+            cameraMovementScript = cameraController;
         }
-        return false;
-    }
 
-}
+        public static bool checkTapping()
+        {
+            if (CameraMovementScript.isTapped)
+            {
+                CameraMovementScript.isTapped = false;
+                return true;
+            }
+            return false;
+        }
+
+    }
