@@ -22,10 +22,10 @@ public class ThrowController : MonoBehaviour
     public Transform weapon;
     public Transform hand;
     public Transform curvePoint;
+    private Vector3 originCurvePoint;
     [Space]
     [Header("Parameters")]
     public float throwPower = 150;
-    public float throwLevitate=20;
     [Space]
     [Header("Bools")]
     public bool hasWeapon = true;
@@ -43,15 +43,16 @@ public class ThrowController : MonoBehaviour
         animator = GetComponent<Animator>();
         weaponRb = weapon.GetComponent<Rigidbody>();
         weaponScript = weapon.GetComponent<WeaponScript>();
+        weaponScript.throwPower = throwPower;
         origLocPos = weapon.localPosition;
         origLocRot = weapon.localEulerAngles;
+        originCurvePoint = curvePoint.localPosition;
     }
 
     public void setAim(bool isAiminig)
     {
         animator.SetBool("aiming", isAiminig);
     }
-
     void Update()
     {
         transform.eulerAngles = new Vector3(Mathf.LerpAngle(transform.eulerAngles.x, 0, .2f), transform.eulerAngles.y, transform.eulerAngles.z);
@@ -65,14 +66,16 @@ public class ThrowController : MonoBehaviour
             if (GameManagerScript.checkTapping())
             {
                 setAim(true);
+                setCurvePoint();
             }
 
         }
         else
         {
-            if (GameManagerScript.checkTapping())
+            if (GameManagerScript.checkTapping() && !pulling)
             {
                 WeaponStartPull();
+                setCurvePoint();
             }
         }
 
@@ -81,7 +84,7 @@ public class ThrowController : MonoBehaviour
             if (returnTime < 1)
             {
                 weapon.position = GetQuadraticCurvePoint(returnTime, pullPosition, curvePoint.position, hand.position);
-                returnTime += Time.deltaTime * 1.5f;
+                returnTime += Time.deltaTime;
             }
             else
             {
@@ -94,6 +97,19 @@ public class ThrowController : MonoBehaviour
         }
     }
 
+    private void setCurvePoint()
+    {
+        if (gameObject.transform.rotation.y > CameraMovementScript.currentRotation)
+        {
+            curvePoint.eulerAngles = originCurvePoint;
+        }
+        else
+        {
+            curvePoint.eulerAngles = new Vector3(originCurvePoint.x, -originCurvePoint.y, originCurvePoint.z);
+        }
+
+    }
+
     public void WeaponThrow()
     {
         setAim(false);
@@ -101,11 +117,14 @@ public class ThrowController : MonoBehaviour
         weaponScript.activated = true;
         weaponRb.isKinematic = false;
         weaponRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        weaponRb.interpolation = RigidbodyInterpolation.Interpolate;
         weapon.parent = null;
         weapon.eulerAngles = new Vector3(0, -90 + transform.eulerAngles.y, 0);
         weapon.transform.position += transform.right / 5;
-        weaponRb.useGravity=false;
-        weaponRb.AddForce(Camera.main.transform.forward * throwPower+Vector3.up*throwLevitate, ForceMode.Impulse);
+        weaponRb.useGravity = false;
+        weaponScript.activeForce = gameObject.transform.forward * throwPower;
+        weaponScript.forwardVector = gameObject.transform.forward;
+        weaponRb.AddForce(gameObject.transform.forward * throwPower, ForceMode.Impulse);
 
         //Trail
         trailRenderer.emitting = true;
@@ -116,7 +135,7 @@ public class ThrowController : MonoBehaviour
     {
         pullPosition = weapon.position;
         weaponRb.Sleep();
-        weaponRb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        weaponRb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         weaponRb.isKinematic = true;
         weapon.DORotate(new Vector3(-90, -90, 0), .2f).SetEase(Ease.InOutSine);
         weapon.DOBlendableLocalRotateBy(Vector3.right * 90, .5f);

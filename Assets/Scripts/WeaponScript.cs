@@ -6,24 +6,33 @@ public class WeaponScript : MonoBehaviour
 {
 
     public bool activated;
+    public Vector3 activeForce;
+    private Rigidbody rb;
 
     public float rotationSpeed;
+    public float throwPower;
+    public Vector3 forwardVector;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     void Update()
     {
-
         if (activated)
         {
             transform.localEulerAngles += Vector3.forward * rotationSpeed * Time.deltaTime;
+            if(rb.velocity.magnitude<1){
+                rb.AddForce(forwardVector * throwPower, ForceMode.Impulse);
+            }
         }
 
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.layer==10){
-            collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(15, collision.gameObject.transform.position, 30);
-        }
+
         if (collision.gameObject.layer == 11)
         {
             GetComponent<Rigidbody>().Sleep();
@@ -31,6 +40,9 @@ public class WeaponScript : MonoBehaviour
             GetComponent<Rigidbody>().isKinematic = true;
             activated = false;
         }
-
+        else
+        {
+            rb.AddForce(activeForce);
+        }
     }
 }

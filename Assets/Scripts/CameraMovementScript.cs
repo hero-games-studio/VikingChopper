@@ -13,10 +13,13 @@ public class CameraMovementScript : MonoBehaviour
     private Vector3 cameraRotation;
 
     private float pressTime = 0f;
-    private float tapLimit = 0.25f;
+    private float tapLimit = 0.3f;
     private bool isCoroutineRunning = false;
 
-    public static bool isTapped = false; float deltaTime = 0.0f;
+    public static bool isTapped = false;
+    private float angleSpace = 90;
+    private float minAngle, maxAngle;
+
 
 
     void Update()
@@ -28,19 +31,6 @@ public class CameraMovementScript : MonoBehaviour
 #if UNITY_ANDROID
         touchProcess();
 #endif
-    }
-    void OnGUI()
-    {
-        int w = Screen.width, h = Screen.height;
-
-        GUIStyle style = new GUIStyle();
-
-        Rect rect = new Rect(0, 0, w, h * 2 / 100);
-        style.alignment = TextAnchor.UpperLeft;
-        style.fontSize = h * 2 / 100;
-        style.normal.textColor = new Color(0.0f, 0.0f, 0.5f, 1.0f);
-        string text = pressTime.ToString();
-        GUI.Label(rect, text, style);
     }
 
     private IEnumerator mouseSwirl()
@@ -79,7 +69,7 @@ public class CameraMovementScript : MonoBehaviour
             pressTime = 0f;
         }
     }
-
+    public static float currentRotation;
     private Vector2 lastPos;
     private float touchSpeedMultiplier = 0.08f;
     private void touchProcess()
@@ -95,14 +85,16 @@ public class CameraMovementScript : MonoBehaviour
             float rot = calculateRotation(lastPos, touch.position);
 
             pressTime += Time.deltaTime;
-            Debug.Log(pressTime);
             cameraRotation = new Vector3(0, rot * touchSpeedMultiplier, 0);
             lastPos = touch.position;
-            playerObject.transform.eulerAngles = playerObject.transform.rotation.eulerAngles + cameraRotation;
+            Vector3 res = getLimitedRotation(playerObject.transform.rotation.eulerAngles + cameraRotation);
+            currentRotation=res.y;
+            playerObject.transform.eulerAngles = res;
         }
         else if (pressTime < tapLimit && pressTime > 0f && Input.touchCount == 0)
         {
             isTapped = true;
+            pressTime = 0f;
         }
         else
         {
@@ -115,5 +107,25 @@ public class CameraMovementScript : MonoBehaviour
     {
         float val = -(beganPos.x - currentPos.x);
         return val;
+    }
+
+    private Vector3 getLimitedRotation(Vector3 rotation)
+    {
+        if (rotation.y < minAngle)
+        {
+            return new Vector3(0, minAngle, 0);
+        }
+        else if (rotation.y > maxAngle)
+        {
+            return new Vector3(0, maxAngle, 0);
+        }
+        else return rotation;
+    }
+
+    void Start()
+    {
+        float startrot = playerObject.transform.eulerAngles.y;
+        minAngle = startrot - angleSpace / 2;
+        maxAngle = startrot + angleSpace / 2f;
     }
 }
