@@ -17,7 +17,7 @@ public class CameraMovementScript : MonoBehaviour
     private bool isCoroutineRunning = false;
 
     public static bool isTapped = false;
-    private float angleSpace = 90;
+    private float angleSpace = 60;
     private float minAngle, maxAngle;
 
 
@@ -111,6 +111,7 @@ public class CameraMovementScript : MonoBehaviour
 
     private Vector3 getLimitedRotation(Vector3 rotation)
     {
+        Debug.Log(rotation);
         if (rotation.y < minAngle)
         {
             return new Vector3(0, minAngle, 0);

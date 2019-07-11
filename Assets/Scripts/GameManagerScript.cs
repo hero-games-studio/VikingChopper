@@ -6,9 +6,9 @@ using UnityEngine.SceneManagement;
 public class GameManagerScript : MonoBehaviour
 {
     [SerializeField]
-    public CameraMovementScript cameraController;
+    private CameraMovementScript cameraController;
 
-    private static CameraMovementScript cameraMovementScript;
+    public static CameraMovementScript cameraMovementScript;
 
     [SerializeField]
     private ThrowController throwController;
@@ -26,7 +26,6 @@ public class GameManagerScript : MonoBehaviour
     {
         var objects = FindObjectsOfType<TreeCutScript>();
         totalTreeCount = objects.Length;
-        Debug.Log(totalTreeCount);
     }
 
     public static bool checkTapping()
@@ -52,6 +51,10 @@ public class GameManagerScript : MonoBehaviour
             totalTreeCount = 0;
             cuttedTreeCount = 0;
         }
+    }
+
+    public static void enablePulling(Vector3 pos){
+        throwControllerScript.WeaponStartPull();
     }
 
 }

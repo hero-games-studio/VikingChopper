@@ -35,10 +35,11 @@ public class WeaponScript : MonoBehaviour
 
         if (collision.gameObject.layer == 11)
         {
-            GetComponent<Rigidbody>().Sleep();
-            GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-            GetComponent<Rigidbody>().isKinematic = true;
-            activated = false;
+            rb.Sleep();
+
+            rb.isKinematic = true;
+            rb.collisionDetectionMode=CollisionDetectionMode.ContinuousSpeculative;
+            GameManagerScript.enablePulling(gameObject.transform.position);
         }
         else
         {
