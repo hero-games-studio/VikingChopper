@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3974134095367224616}
   - component: {fileID: 3974134095367224619}
   - component: {fileID: 3974134095367224617}
-  - component: {fileID: 4129580326686184437}
+  - component: {fileID: 4366986403706692109}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -60,10 +60,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 444cf371c28fab547b3ff009c5e4ba5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneManage: {fileID: 4129580326686184437}
+  sceneManage: {fileID: 4366986403706692109}
   cameraController: {fileID: 3974134095367224619}
   throwController: {fileID: 0}
---- !u!114 &4129580326686184437
+  panelTransform: {fileID: 0}
+--- !u!114 &4366986403706692109
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

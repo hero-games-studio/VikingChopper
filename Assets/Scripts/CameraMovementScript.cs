@@ -13,7 +13,7 @@ public class CameraMovementScript : MonoBehaviour
     private Vector3 cameraRotation;
 
     private float pressTime = 0f;
-    private float tapLimit = 0.3f;
+    private float tapLimit = 0.15f;
     private bool isCoroutineRunning = false;
 
     public static bool isTapped = false;

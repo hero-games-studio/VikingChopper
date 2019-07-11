@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using DG.Tweening;
 using UnityEngine.UI;
 
@@ -9,9 +8,9 @@ using UnityEngine.UI;
 public class ThrowController : MonoBehaviour
 {
 
-    private Animator animator;
+    public Animator animator;
     private Rigidbody weaponRb;
-    private WeaponScript weaponScript;
+    public WeaponScript weaponScript;
     private float returnTime;
 
     private Vector3 origLocPos;
@@ -33,13 +32,11 @@ public class ThrowController : MonoBehaviour
 
     void Start()
     {
-        animator = GetComponent<Animator>();
+        WeaponCatch();
         weaponRb = weapon.GetComponent<Rigidbody>();
-        weaponScript = weapon.GetComponent<WeaponScript>();
         weaponScript.throwPower = throwPower;
         origLocPos = weapon.localPosition;
         origLocRot = weapon.localEulerAngles;
-        trailRenderer = weapon.GetComponent<TrailRenderer>();
     }
 
     public void setAim(bool isAiminig)
@@ -82,16 +79,12 @@ public class ThrowController : MonoBehaviour
                 WeaponCatch();
             }
         }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadSceneAsync(0);
-        }
     }
 
     //The position of boomerang hit
     private Vector3 throwForwardVector;
 
-    private TrailRenderer trailRenderer;
+    public TrailRenderer trailRenderer;
     public void WeaponThrow()
     {
         trailRenderer.enabled = true;

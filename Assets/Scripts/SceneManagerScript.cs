@@ -11,9 +11,7 @@ public class SceneManagerScript : MonoBehaviour
     }
     public void loadNextScene()
     {
-        Debug.Log(SceneManager.GetActiveScene().buildIndex);
-        Debug.Log(sceneCount);
-        if (SceneManager.GetActiveScene().buildIndex != sceneCount)
+        if (SceneManager.GetActiveScene().buildIndex != sceneCount-1)
         {
             Invoke("invokableLoad", 2f);
         }
