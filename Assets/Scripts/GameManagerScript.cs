@@ -6,9 +6,12 @@ using UnityEngine.SceneManagement;
 public class GameManagerScript : MonoBehaviour
 {
     [SerializeField]
+    private SceneManagerScript sceneManage;
+    [SerializeField]
     private CameraMovementScript cameraController;
 
     public static CameraMovementScript cameraMovementScript;
+    public static SceneManagerScript sceneManagerScript;
 
     [SerializeField]
     private ThrowController throwController;
@@ -16,6 +19,7 @@ public class GameManagerScript : MonoBehaviour
 
     void Start()
     {
+        sceneManagerScript = sceneManage;
         throwControllerScript = throwController;
         RenderSettings.fog = false;
         Application.targetFrameRate = 60;
@@ -46,14 +50,16 @@ public class GameManagerScript : MonoBehaviour
         cuttedTreeCount++;
         if (cuttedTreeCount == totalTreeCount)
         {
-            if(SceneManager.GetActiveScene().buildIndex!=2)
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            throwControllerScript.WeaponCatch();
+            sceneManagerScript.loadNextScene();
             totalTreeCount = 0;
             cuttedTreeCount = 0;
         }
     }
 
-    public static void enablePulling(Vector3 pos){
+    public static void enablePulling(Vector3 pos)
+    {
+
         throwControllerScript.WeaponStartPull();
     }
 

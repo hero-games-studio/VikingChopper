@@ -29,23 +29,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 19.163868, y: 32.898365, z: 9.864301}
   m_Center: {x: 4.198225, y: 1.2573749, z: 0.6891735}
---- !u!114 &6962733933464681011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1074031289458661837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a85bc15d67bc6241b45f04e957a2dcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  activated: 0
-  activeForce: {x: 0, y: 0, z: 0}
-  rotationSpeed: 900
-  throwPower: 100
-  forwardVector: {x: 0, y: 0, z: 0}
 --- !u!96 &7943773935580920044
 TrailRenderer:
   serializedVersion: 2
@@ -159,6 +142,23 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &6962733933464681011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074031289458661837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a85bc15d67bc6241b45f04e957a2dcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activated: 0
+  activeForce: {x: 0, y: 0, z: 0}
+  rotationSpeed: 900
+  throwPower: 100
+  forwardVector: {x: 0, y: 0, z: 0}
 --- !u!1 &3369794361046573014
 GameObject:
   m_ObjectHideFlags: 0
@@ -2312,7 +2312,6 @@ MonoBehaviour:
   curvePoint: {fileID: 5030820803395717063}
   throwPower: 125
   hasWeapon: 1
-  hitPos: {x: 0, y: 0, z: 0}
 --- !u!1 &5030820803914890126
 GameObject:
   m_ObjectHideFlags: 0

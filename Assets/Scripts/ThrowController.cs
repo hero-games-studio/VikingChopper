@@ -113,8 +113,8 @@ public class ThrowController : MonoBehaviour
     {
         pullPosition = weapon.position;
         weaponRb.Sleep();
-        weaponRb.isKinematic = true;
         weaponRb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+        weaponRb.isKinematic = true;
         weapon.DORotate(new Vector3(-90, -90, 0), .2f).SetEase(Ease.InOutSine);
         weapon.DOBlendableLocalRotateBy(Vector3.right * 90, .5f);
         weaponScript.activated = true;
