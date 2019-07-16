@@ -1,92 +1,93 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using DG.Tweening;
+﻿using UnityEngine;
 public class GameManagerScript : MonoBehaviour
 {
+    //Non static variables
     [SerializeField]
-    private SceneManagerScript sceneManage;
-    [SerializeField]
+    private SceneManagerScript sceneManager;
     private CameraMovementScript cameraController;
-
-    public static CameraMovementScript cameraMovementScript;
-    public static SceneManagerScript sceneManagerScript;
-
     [SerializeField]
     private ThrowController throwController;
+    private RectTransform panelTransform;
+    [SerializeField]
+    private int tearDropSineMultiplierNonStatic;
+    [SerializeField]
+    private TrajectoryScript trajectoryNonStatic;
+    [SerializeField]
+    private WeaponScript weaponScriptNonStatic;
+    [SerializeField]
+    private TrailRenderer trailRenderer;
+
+    //Camera controller script as static
+    public static CameraMovementScript cameraMovementScript;
+
+    //Variables for Throwing and trajectory displaying with static property for static access
     public static ThrowController throwControllerScript;
-
     public static int tearDropSineMultiplier;
-
     private static TrajectoryScript trajectory;
+    public static float axisMultiplier = 1;
+    public static bool hasWeapon = true;
+    public static WeaponScript weaponScript;
+    public static TrailRenderer weaponTrailRenderer;
 
-    public RectTransform panelTransform;
+
+    //Variables for scene manager for static access
+    public static SceneManagerScript sceneManagerScript;
     private static RectTransform levelFinishedPanel;
     private static int cuttedTreeCount = 0;
     private static int totalTreeCount = 0;
     void Start()
     {
-        trajectory = gameObject.GetComponent<TrajectoryScript>();
-        levelFinishedPanel = panelTransform;
-        sceneManagerScript = sceneManage;
-        throwControllerScript = throwController;
-        RenderSettings.fog = false;
+        weaponTrailRenderer = trailRenderer;
+        weaponScript = weaponScriptNonStatic;
         Application.targetFrameRate = 60;
+        levelFinishedPanel = panelTransform;
+        sceneManagerScript = sceneManager;
+        throwControllerScript = throwController;
         cameraMovementScript = cameraController;
+        trajectory = trajectoryNonStatic;
+        tearDropSineMultiplier = tearDropSineMultiplierNonStatic;
     }
-
-    private static void findTotalTreeCount()
-    {
-        var objects = FindObjectsOfType<TreeCutScript>();
-        totalTreeCount = objects.Length;
-    }
-
-    public static bool checkTapping()
-    {
-        if (CameraMovementScript.isTapped)
-        {
-            CameraMovementScript.isTapped = false;
-            return true;
-        }
-        return false;
-    }
-    public static void incrementCuttedTreeCount()
-    {
-        if (totalTreeCount == 0)
-            findTotalTreeCount();
-        cuttedTreeCount++;
-        if (cuttedTreeCount == totalTreeCount)
-        {
-            showLevelFinished();
-            sceneManagerScript.loadNextScene();
-            totalTreeCount = 0;
-            cuttedTreeCount = 0;
-        }
-    }
-
-    public static void changeShowTrajectory(bool set)
+    public static void setShowTrajectory(bool set)
     {
         trajectory.showTrajectoryActive = set;
+        if (!set)
+        {
+            trajectory.resetDots();
+        }
     }
-
-    public static float axisMultiplier;
-
-    private static void showLevelFinished()
-    {
-        Debug.Log("entered");
-        levelFinishedPanel.DOAnchorPos(new Vector2(0, 0), 1f);
-    }
-
-    public static void enablePulling()
-    {
-
-        throwControllerScript.WeaponStartPull();
-    }
-
     public static void enableCatch()
     {
         throwControllerScript.WeaponCatch();
     }
+    public static void throwWeapon()
+    {
+        throwControllerScript.setAim(true);
+    }
+    public static void setWeaponPulling()
+    {
+        throwControllerScript.WeapoonPulling();
+    }
+    public static void incrementCuttedTreeCount()
+    {
+        sceneManagerScript.addTreeCut();
+        sceneManagerScript.checkSceneLoadCondition();
+    }
 
+    public static void enableSpinning()
+    {
+        weaponScript.enableSpinning();
+    }
+
+    public static void disableSpinning()
+    {
+        weaponScript.disableSpinning();
+    }
+    public static void enableTrailRenderer()
+    {
+        weaponTrailRenderer.enabled = true;
+    }
+    public static void disableTrailRenderer()
+    {
+        weaponTrailRenderer.enabled = false;
+    }
 }

@@ -4,12 +4,12 @@ public class TrajectoryScript : MonoBehaviour
 {
     public GameObject dot;
     public GameObject dotParent;
-    private Quaternion playerRotation;
     public GameObject playerObject;
     public float maxDotAngle = 200;
     public int dotCount;
     private GameObject[] dots;
-    public bool showTrajectoryActive;
+    [HideInInspector]
+    public bool showTrajectoryActive = false;
     private Vector3 originalDotPos;
     private Quaternion throwStartRot;
 
@@ -23,14 +23,8 @@ public class TrajectoryScript : MonoBehaviour
     {
         if (showTrajectoryActive)
         {
-            throwStartRot = Quaternion.Euler(playerObject.transform.rotation.eulerAngles.x,
-            playerObject.transform.rotation.eulerAngles.y,
-            playerObject.transform.rotation.eulerAngles.z);
+            throwStartRot = playerObject.transform.rotation;
             showTrajectory();
-        }
-        else
-        {
-            resetDots();
         }
     }
 
@@ -44,7 +38,7 @@ public class TrajectoryScript : MonoBehaviour
         }
     }
 
-    private void resetDots()
+    public void resetDots()
     {
         for (int i = 0; i < dotCount; i++)
         {
@@ -66,21 +60,20 @@ public class TrajectoryScript : MonoBehaviour
             Vector3 direction = rotatedVector * result;
             dots[i].transform.position = direction;
         }
-
     }
 
 
     private Vector3 calcPos(float time)
     {
         time = time * Mathf.Deg2Rad;
-        float zVal;
-        zVal = Mathf.Sin(time);
+        float zVal = Mathf.Sin(time);
         for (int i = 0; i < GameManagerScript.tearDropSineMultiplier; i++)
         {
             zVal *= Mathf.Sin(time / 2);
         }
-        return new Vector3(Mathf.Cos(time) * GameManagerScript.axisMultiplier,
+        Vector3 output = new Vector3(Mathf.Cos(time) * GameManagerScript.axisMultiplier,
                              0.15f,
                              zVal * GameManagerScript.axisMultiplier / 2) * 10;
+        return output;
     }
 }

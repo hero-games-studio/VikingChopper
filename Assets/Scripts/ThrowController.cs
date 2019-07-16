@@ -8,30 +8,19 @@ using UnityEngine.UI;
 public class ThrowController : MonoBehaviour
 {
 
+    [Header("Public References")]
     public Animator animator;
     public WeaponScript weaponScript;
-
+    public Transform weapon;
+    public Transform hand;
     private Vector3 origLocPos;
     private Vector3 origLocRot;
     private Vector3 pullPosition;
 
-    [Header("Public References")]
-    public Transform weapon;
-    public Transform hand;
-    public Transform curvePoint;
-    [Space]
-    [Header("Parameters")]
-    public float throwPower = 150;
-    [Space]
-    [Header("Bools")]
-    public bool hasWeapon = true;
-    public static bool pulling = false;
-    [HideInInspector]
 
     void Start()
     {
         WeaponCatch();
-        weaponScript.throwPower = throwPower;
         origLocPos = weapon.localPosition;
         origLocRot = weapon.localEulerAngles;
     }
@@ -40,59 +29,37 @@ public class ThrowController : MonoBehaviour
     {
         animator.SetBool("aiming", isAiminig);
     }
-    void FixedUpdate()
+    public void WeapoonPulling()
     {
-         //Animation States
-        animator.SetBool("pulling", pulling);
-
-        if (hasWeapon)
-        {
-
-            if (GameManagerScript.checkTapping())
-            {
-                setAim(true);
-            }
-
-        }
-        else
-        {
-            if (GameManagerScript.checkTapping() && !pulling)
-            {
-                WeaponStartPull();
-            }
-        }
+        setPulling(true);
     }
-
-    //The position of boomerang hit
-    private Vector3 throwForwardVector;
 
     public TrailRenderer trailRenderer;
 
-    public void WeaponThrow(){
-        trailRenderer.enabled=true;
-        setAim(false);
-        hasWeapon=false;
-        weaponScript.enabled=true;
-        weaponScript.moveWeapon();
-    }
-
-    public void WeaponStartPull()
+    public void WeaponThrow()
     {
-        pullPosition = weapon.position;
-        weapon.DORotate(new Vector3(-90, -90, 0), .2f).SetEase(Ease.InOutSine);
-        weapon.DOBlendableLocalRotateBy(Vector3.right * 90, .5f);
+        GameManagerScript.enableTrailRenderer();
         weaponScript.activated = true;
-        pulling = true;
+        weapon.parent = null;
+        setAim(false);
+        GameManagerScript.hasWeapon = false;
+        GameManagerScript.enableSpinning();
+        weaponScript.moveWeapon();
     }
 
     public void WeaponCatch()
     {
-        GameManagerScript.changeShowTrajectory(true);
-        trailRenderer.enabled = false;
-        pulling = false;
-        weaponScript.activated = false;
+        weapon.parent = hand;
+        GameManagerScript.disableSpinning();
+        GameManagerScript.disableTrailRenderer();
         weapon.localEulerAngles = origLocRot;
         weapon.localPosition = origLocPos;
-        hasWeapon = true;
+        setPulling(false);
+        GameManagerScript.hasWeapon = true;
+    }
+
+    private void setPulling(bool val)
+    {
+        animator.SetBool("pulling", val);
     }
 }

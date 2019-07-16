@@ -7,7 +7,6 @@ public class WeaponScript : MonoBehaviour
     public bool activated;
 
     public float rotationSpeed;
-    public float throwPower;
     private float passedTimeTillThrow = 0f;
     public int tearDropSineMultiplier = 3;
     public float timeMultiplier = 10;
@@ -17,23 +16,27 @@ public class WeaponScript : MonoBehaviour
 
     void Start()
     {
-        GameManagerScript.tearDropSineMultiplier = tearDropSineMultiplier;
-    }
-    void Update()
-    {
-        if (activated)
-        {
-            transform.localEulerAngles += Vector3.forward * rotationSpeed * Time.deltaTime;
-        }
-    }
-    private void OnTriggerEnter(Collider collider)
-    {
-        if (collider.tag == "Wall" && passedTimeTillThrow < 180)
-        {
-            //passedTimeTillThrow = 180;
-        }
+        tearDropSineMultiplier = GameManagerScript.tearDropSineMultiplier;
     }
 
+    public void enableSpinning()
+    {
+        StartCoroutine(spinBoomerang());
+    }
+
+    public void disableSpinning()
+    {
+        StopCoroutine(spinBoomerang());
+    }
+
+    IEnumerator spinBoomerang()
+    {
+        while (true)
+        {
+            transform.localEulerAngles += Vector3.forward * rotationSpeed * Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+    }
 
 
     public void moveWeapon()
@@ -44,17 +47,19 @@ public class WeaponScript : MonoBehaviour
     }
     IEnumerator incrementWeaponPos()
     {
-        GameManagerScript.changeShowTrajectory(false);
-        throwStartRot = Quaternion.Euler(playerObject.transform.rotation.eulerAngles.x,
-        playerObject.transform.rotation.eulerAngles.y,
-        playerObject.transform.root.eulerAngles.z);
+        GameManagerScript.setShowTrajectory(false);
+        throwStartRot = playerObject.transform.rotation;
         while (true)
         {
+            if (passedTimeTillThrow >= 300)
+            {
+                GameManagerScript.setWeaponPulling();
+            }
             if (passedTimeTillThrow >= 360f)
             {
                 GameManagerScript.enableCatch();
                 passedTimeTillThrow = 0f;
-                GameManagerScript.changeShowTrajectory(true);
+                GameManagerScript.setShowTrajectory(true);
                 yield break;
             }
             else

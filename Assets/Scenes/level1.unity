@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 262598521}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -228,7 +228,7 @@ PrefabInstance:
     - target: {fileID: 3580749790130477347, guid: 3643c6b64a444fe44a378e4a66e954e5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.657387
+      value: -7.9
       objectReference: {fileID: 0}
     - target: {fileID: 3580749790130477347, guid: 3643c6b64a444fe44a378e4a66e954e5,
         type: 3}
@@ -349,6 +349,11 @@ PrefabInstance:
       propertyPath: playerObject
       value: 
       objectReference: {fileID: 1094779915}
+    - target: {fileID: 3974134095367224619, guid: c4b4a35df472c0b48a6ef5860227eaa7,
+        type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 2048
+      objectReference: {fileID: 0}
     - target: {fileID: 3974134095367224617, guid: c4b4a35df472c0b48a6ef5860227eaa7,
         type: 3}
       propertyPath: throwController
@@ -359,6 +364,31 @@ PrefabInstance:
       propertyPath: panelTransform
       value: 
       objectReference: {fileID: 3528961309789983510}
+    - target: {fileID: 3974134095367224617, guid: c4b4a35df472c0b48a6ef5860227eaa7,
+        type: 3}
+      propertyPath: sceneManager
+      value: 
+      objectReference: {fileID: 1290431733}
+    - target: {fileID: 3974134095367224617, guid: c4b4a35df472c0b48a6ef5860227eaa7,
+        type: 3}
+      propertyPath: trajectoryScript
+      value: 
+      objectReference: {fileID: 1290431732}
+    - target: {fileID: 3974134095367224617, guid: c4b4a35df472c0b48a6ef5860227eaa7,
+        type: 3}
+      propertyPath: trajectoryNonStatic
+      value: 
+      objectReference: {fileID: 1290431732}
+    - target: {fileID: 3974134095367224617, guid: c4b4a35df472c0b48a6ef5860227eaa7,
+        type: 3}
+      propertyPath: tearDropSineMultiplierNonStatic
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3974134095367224617, guid: c4b4a35df472c0b48a6ef5860227eaa7,
+        type: 3}
+      propertyPath: weaponScriptNonStatic
+      value: 
+      objectReference: {fileID: 1140481668}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4b4a35df472c0b48a6ef5860227eaa7, type: 3}
 --- !u!96 &1049706299 stripped
@@ -452,7 +482,7 @@ PrefabInstance:
     - target: {fileID: 3580749790130477347, guid: 3643c6b64a444fe44a378e4a66e954e5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.07577
+      value: 8.4
       objectReference: {fileID: 0}
     - target: {fileID: 3580749790130477347, guid: 3643c6b64a444fe44a378e4a66e954e5,
         type: 3}
@@ -517,9 +547,21 @@ MonoBehaviour:
   dot: {fileID: 1045934321221835374, guid: 90a6b769fe6f3b64f96771dd20371de1, type: 3}
   dotParent: {fileID: 1100270937}
   playerObject: {fileID: 1094779915}
-  maxDotAngle: 220
+  maxDotAngle: 200
   dotCount: 40
   showTrajectoryActive: 0
+--- !u!114 &1290431733 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4366986403706692109, guid: c4b4a35df472c0b48a6ef5860227eaa7,
+    type: 3}
+  m_PrefabInstance: {fileID: 821554386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1290431731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 749be75c824e3f54baaa8b8a288c4afc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1528958257
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,7 +750,48 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8637601808411387003, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637601808411387003, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.00000044703
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637601808411387003, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.7e-14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637601808411387003, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 13.2516
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637601808411387003, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 12.3272
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637601808547642477, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637601808176166453, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637601808506755411, guid: 8bf208dd5d696b745b231eeeeda8045b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.12
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8637601808411387002, guid: 8bf208dd5d696b745b231eeeeda8045b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8bf208dd5d696b745b231eeeeda8045b, type: 3}
 --- !u!108 &1904091522 stripped
 Light:
@@ -842,6 +925,11 @@ PrefabInstance:
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 1140481668}
+    - target: {fileID: 6239461628978288490, guid: d8f5311e169a46441a32a07466360ad4,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6962733933464681011, guid: d8f5311e169a46441a32a07466360ad4,
         type: 3}
       propertyPath: yMultiplier
@@ -871,6 +959,11 @@ PrefabInstance:
         type: 3}
       propertyPath: tearDropSineMultiplier
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6962733933464681011, guid: d8f5311e169a46441a32a07466360ad4,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5030820803914655660, guid: d8f5311e169a46441a32a07466360ad4,
         type: 3}
@@ -972,7 +1065,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
