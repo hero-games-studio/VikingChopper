@@ -5,28 +5,27 @@ using UnityEngine;
 public class CameraMovementScript : MonoBehaviour
 {
     [SerializeField]
-    private Camera mainCamera;
-    [SerializeField]
     private GameObject playerObject;
     [SerializeField]
     private float cameraRotationSpeedMultiplier = 0.2f;
     private Vector3 cameraRotation;
-
     private float pressTime = 0f;
     private float tapLimit = 0.15f;
     private bool isCoroutineRunning = false;
-
     public static bool isTapped = false;
     private float angleSpace = 60;
     private float minAngle, maxAngle;
+    public static float currentRotation;
+    private Vector2 lastPos;
+    private float touchSpeedMultiplier = 0.08f;
 
 
 
     void Update()
-    {
+    {/*
 #if UNITY_EDITOR
         mouseProcess();
-#endif
+#endif */
 
 #if UNITY_ANDROID
         touchProcess();
@@ -64,35 +63,45 @@ public class CameraMovementScript : MonoBehaviour
             }
             if (pressTime < tapLimit && pressTime > 0f)
             {
+                GameManagerScript.axisMultiplier = 2f;
+                GameManagerScript.changeShowTrajectory(false);
                 isTapped = true;
             }
             pressTime = 0f;
         }
     }
-    public static float currentRotation;
-    private Vector2 lastPos;
-    private float touchSpeedMultiplier = 0.08f;
+
+    private Vector3 touchPos;
+    private RaycastHit hit;
     private void touchProcess()
     {
         if (Input.touchCount > 0)
         {
-
+            GameManagerScript.changeShowTrajectory(true);
             Touch touch = Input.GetTouch(0);
+
+
+
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Physics.Raycast(ray, out hit, 1000, 11);
             if (touch.phase == TouchPhase.Began)
             {
-                lastPos = touch.position;
+                touchPos = hit.point;
             }
-            float rot = calculateRotation(lastPos, touch.position);
+            Vector3 subtraction = hit.point - touchPos;
+            float angle = Vector3.SignedAngle(subtraction, playerObject.transform.forward, Vector3.up);
+            gameObject.transform.eulerAngles = new Vector3(0, 180 - angle, 0);
 
-            pressTime += Time.deltaTime;
-            cameraRotation = new Vector3(0, rot * touchSpeedMultiplier, 0);
-            lastPos = touch.position;
-            Vector3 res = getLimitedRotation(playerObject.transform.rotation.eulerAngles + cameraRotation);
-            currentRotation=res.y;
-            playerObject.transform.eulerAngles = res;
+            GameManagerScript.axisMultiplier = Mathf.Clamp(subtraction.magnitude, 2.5f, 7.5f);
+
+            float rot = calculateRotation(touchPos, touch.position);
+            Debug.Log(GameManagerScript.axisMultiplier);
+            playerObject.transform.rotation = Quaternion.Euler(0,rot,0);
         }
         else if (pressTime < tapLimit && pressTime > 0f && Input.touchCount == 0)
         {
+            GameManagerScript.axisMultiplier = 2f;
             isTapped = true;
             pressTime = 0f;
         }

@@ -17,13 +17,18 @@ public class GameManagerScript : MonoBehaviour
     private ThrowController throwController;
     public static ThrowController throwControllerScript;
 
+    public static int tearDropSineMultiplier;
+
+    private static TrajectoryScript trajectory;
+
     public RectTransform panelTransform;
     private static RectTransform levelFinishedPanel;
     private static int cuttedTreeCount = 0;
     private static int totalTreeCount = 0;
     void Start()
     {
-        levelFinishedPanel=panelTransform;
+        trajectory = gameObject.GetComponent<TrajectoryScript>();
+        levelFinishedPanel = panelTransform;
         sceneManagerScript = sceneManage;
         throwControllerScript = throwController;
         RenderSettings.fog = false;
@@ -60,16 +65,28 @@ public class GameManagerScript : MonoBehaviour
         }
     }
 
+    public static void changeShowTrajectory(bool set)
+    {
+        trajectory.showTrajectoryActive = set;
+    }
+
+    public static float axisMultiplier;
+
     private static void showLevelFinished()
     {
         Debug.Log("entered");
         levelFinishedPanel.DOAnchorPos(new Vector2(0, 0), 1f);
     }
 
-    public static void enablePulling(Vector3 pos)
+    public static void enablePulling()
     {
 
         throwControllerScript.WeaponStartPull();
+    }
+
+    public static void enableCatch()
+    {
+        throwControllerScript.WeaponCatch();
     }
 
 }
