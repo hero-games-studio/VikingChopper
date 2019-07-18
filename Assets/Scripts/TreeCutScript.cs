@@ -6,6 +6,8 @@ public class TreeCutScript : MonoBehaviour
 
     private GameObject instanced;
 
+    
+
     void OnTriggerEnter(Collider other)
     {
         instanced = Instantiate(breakable, transform.position, Quaternion.identity);
@@ -14,7 +16,7 @@ public class TreeCutScript : MonoBehaviour
             Rigidbody[] rbs = instanced.GetComponentsInChildren<Rigidbody>();
             foreach (Rigidbody rb in rbs)
             {
-                rb.AddExplosionForce(30, transform.position, 30);
+                rb.AddExplosionForce(60, transform.position, 30);
             }
         }
         GameManagerScript.incrementCuttedTreeCount();

@@ -9,17 +9,22 @@ public class CameraMovementScript : MonoBehaviour
     private float cameraRotationSpeedMultiplier = 0.2f;
     [SerializeField]
     private LayerMask groundMask;
+    [SerializeField]
+    private GameObject PressIndicator;
     public static bool isTapped = false;
     private float angleSpace = 60;
     private float minAngle, maxAngle;
     private RaycastHit hit;
     private Vector3 firstDownPosition;
 
+    private Vector3 initialForward;
+
     void Start()
     {
         float startrot = playerObject.transform.eulerAngles.y;
         minAngle = startrot - angleSpace / 2;
         maxAngle = startrot + angleSpace / 2f;
+        initialForward = playerObject.transform.forward;
     }
     void Update()
     {
@@ -31,16 +36,22 @@ public class CameraMovementScript : MonoBehaviour
     //Get mouse position for player rotation
     private IEnumerator mouseSwirl()
     {
-        //Create variable to use as non global
-        Vector3 cameraRotation;
+        PressIndicator.transform.position = getRaycastWorldPos();
         while (true)
         {
-            float deltaRotation = Input.GetAxis("Mouse X");
             float deltaPosition = Vector3.Magnitude(firstDownPosition - getRaycastWorldPos());
-            GameManagerScript.axisMultiplier = Mathf.Clamp(deltaPosition / 10f, 0.25f, 2.5f);
-            cameraRotation = new Vector3(0, deltaRotation * cameraRotationSpeedMultiplier, 0);
-            playerObject.transform.eulerAngles = playerObject.transform.rotation.eulerAngles + cameraRotation;
-            yield return new WaitForSecondsRealtime(1 / 60);
+
+
+            Vector3 subtraction = hit.point - firstDownPosition;
+            float angle = Vector3.SignedAngle(subtraction, initialForward, Vector3.up);
+            playerObject.transform.eulerAngles = new Vector3(0, 90 - angle, 0);
+
+
+            if (GameManagerScript.hasWeapon)
+            {
+                GameManagerScript.axisMultiplier = Mathf.Clamp(deltaPosition / 10f, 0.25f, 2.5f);
+            }
+            yield return null;
         }
     }
 
@@ -55,20 +66,26 @@ public class CameraMovementScript : MonoBehaviour
     //Mouse input controls for using in unity for test purpose
     private void mouseProcess()
     {
+        //Mouse pressed
         if (Input.GetMouseButtonDown(0))
         {
             if (GameManagerScript.hasWeapon)
             {
+                GameManagerScript.triggerPulling();
                 firstDownPosition = getRaycastWorldPos();
                 GameManagerScript.setShowTrajectory(true);
             }
             StartCoroutine("mouseSwirl");
         }
+        //Mouse released
         else if (Input.GetMouseButtonUp(0))
         {
             if (GameManagerScript.hasWeapon)
             {
-                GameManagerScript.throwWeapon();
+                //Trigger throw animation from game manager
+                GameManagerScript.triggerThrowing();
+                GameManagerScript.setShowTrajectory(false);
+                PressIndicator.transform.position = new Vector3(-100, 100, -100);
             }
             StopCoroutine("mouseSwirl");
         }
@@ -94,7 +111,6 @@ public class CameraMovementScript : MonoBehaviour
             GameManagerScript.axisMultiplier = Mathf.Clamp(subtraction.magnitude, 2.5f, 7.5f);
 
             float rot = calculateRotation(firstDownPosition, touch.position);
-            Debug.Log(GameManagerScript.axisMultiplier);
             playerObject.transform.rotation = Quaternion.Euler(0, rot, 0);
         }
     }

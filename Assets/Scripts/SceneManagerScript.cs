@@ -1,29 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class SceneManagerScript : MonoBehaviour
 {
     private int sceneCount;
 
-    private int treeCount;
+    //DOTween for level finished sign
+    [SerializeField]
+    private RectTransform panelTransform;
+
+    private int totalTreeCount;
     public int cuttedTreeCount = 0;
     void Start()
     {
         sceneCount = SceneManager.sceneCountInBuildSettings;
-        treeCount = FindObjectsOfType<TreeCutScript>().Length;
+        totalTreeCount = FindObjectsOfType<TreeCutScript>().Length;
     }
     private void loadNextScene()
     {
         if (SceneManager.GetActiveScene().buildIndex != sceneCount - 1)
-        {
-            Invoke("invokableLoad", 2f);
+        {panelTransform.DOAnchorPos(new Vector2(0,0),1f);
+            Invoke("invokableLoad", 2.5f);
         }
     }
 
     public void checkSceneLoadCondition()
     {
-        if (cuttedTreeCount == treeCount)
+        Debug.Log(cuttedTreeCount + "  " + totalTreeCount );
+        if (cuttedTreeCount == totalTreeCount)
         {
             loadNextScene();
         }

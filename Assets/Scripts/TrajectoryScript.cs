@@ -8,10 +8,10 @@ public class TrajectoryScript : MonoBehaviour
     public float maxDotAngle = 200;
     public int dotCount;
     private GameObject[] dots;
-    [HideInInspector]
     public bool showTrajectoryActive = false;
     private Vector3 originalDotPos;
     private Quaternion throwStartRot;
+    public Vector3 dotColor;
 
     void Start()
     {
@@ -34,7 +34,7 @@ public class TrajectoryScript : MonoBehaviour
         {
             float alpha = 1 - (i / dotCount);
             dots[(int)i] = Instantiate(dot, pos, Quaternion.Euler(0, 0, 0), dotParent.transform);
-            dots[(int)i].GetComponent<MeshRenderer>().material.SetVector("_alpha", new Vector4(0, 0, 0, alpha));
+            dots[(int)i].GetComponent<MeshRenderer>().material.SetVector("_alpha", new Vector4(dotColor.x, dotColor.y, dotColor.z, alpha));
         }
     }
 
@@ -62,7 +62,7 @@ public class TrajectoryScript : MonoBehaviour
         }
     }
 
-
+    public Vector3 correctionVector;
     private Vector3 calcPos(float time)
     {
         time = time * Mathf.Deg2Rad;
@@ -72,8 +72,8 @@ public class TrajectoryScript : MonoBehaviour
             zVal *= Mathf.Sin(time / 2);
         }
         Vector3 output = new Vector3(Mathf.Cos(time) * GameManagerScript.axisMultiplier,
-                             0.15f,
+                             0.25f,
                              zVal * GameManagerScript.axisMultiplier / 2) * 10;
-        return output;
+        return output+correctionVector;
     }
 }

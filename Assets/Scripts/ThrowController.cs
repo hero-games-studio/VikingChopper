@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using DG.Tweening;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
 public class ThrowController : MonoBehaviour
 {
 
+    private Animator animator;
     [Header("Public References")]
-    public Animator animator;
     public WeaponScript weaponScript;
     public Transform weapon;
     public Transform hand;
@@ -21,17 +17,9 @@ public class ThrowController : MonoBehaviour
     void Start()
     {
         WeaponCatch();
+        animator = gameObject.GetComponent<Animator>();
         origLocPos = weapon.localPosition;
         origLocRot = weapon.localEulerAngles;
-    }
-
-    public void setAim(bool isAiminig)
-    {
-        animator.SetBool("aiming", isAiminig);
-    }
-    public void WeapoonPulling()
-    {
-        setPulling(true);
     }
 
     public TrailRenderer trailRenderer;
@@ -41,7 +29,6 @@ public class ThrowController : MonoBehaviour
         GameManagerScript.enableTrailRenderer();
         weaponScript.activated = true;
         weapon.parent = null;
-        setAim(false);
         GameManagerScript.hasWeapon = false;
         GameManagerScript.enableSpinning();
         weaponScript.moveWeapon();
@@ -52,14 +39,14 @@ public class ThrowController : MonoBehaviour
         weapon.parent = hand;
         GameManagerScript.disableSpinning();
         GameManagerScript.disableTrailRenderer();
+        GameManagerScript.setShowTrajectory(false);
         weapon.localEulerAngles = origLocRot;
         weapon.localPosition = origLocPos;
-        setPulling(false);
         GameManagerScript.hasWeapon = true;
     }
-
-    private void setPulling(bool val)
+    private void checkAnimator()
     {
-        animator.SetBool("pulling", val);
+        if (animator == null)
+            animator = gameObject.GetComponent<Animator>();
     }
 }

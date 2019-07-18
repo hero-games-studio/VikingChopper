@@ -8,25 +8,33 @@ public class WeaponScript : MonoBehaviour
 
     public float rotationSpeed;
     private float passedTimeTillThrow = 0f;
-    public int tearDropSineMultiplier = 3;
-    public float timeMultiplier = 10;
-    private float axisMultiplier = 1;
+    public float timeMultiplier = 400;
     private Quaternion throwStartRot;
     public GameObject playerObject;
 
+    private IEnumerator spinningCoroutine;
+
+    private float originalTimeMultiplier;
+
     void Start()
     {
-        tearDropSineMultiplier = GameManagerScript.tearDropSineMultiplier;
+        originalTimeMultiplier = timeMultiplier;
+        spinningCoroutine = spinBoomerang();
     }
+
 
     public void enableSpinning()
     {
-        StartCoroutine(spinBoomerang());
+        if (spinningCoroutine != null)
+            StartCoroutine(spinningCoroutine);
     }
 
     public void disableSpinning()
     {
-        StopCoroutine(spinBoomerang());
+        if (spinningCoroutine != null)
+        {
+            StopCoroutine(spinningCoroutine);
+        }
     }
 
     IEnumerator spinBoomerang()
@@ -38,28 +46,36 @@ public class WeaponScript : MonoBehaviour
         }
     }
 
-
+    private Vector3 startPos;
+    private Vector3 startRot;
     public void moveWeapon()
     {
         passedTimeTillThrow = 0f;
-        axisMultiplier = GameManagerScript.axisMultiplier;
+        timeMultiplier = originalTimeMultiplier * (1f + (2.5f - GameManagerScript.axisMultiplier));
+        startPos = gameObject.transform.position;
+        startRot = gameObject.transform.rotation.eulerAngles;
         StartCoroutine(incrementWeaponPos());
     }
+
     IEnumerator incrementWeaponPos()
     {
         GameManagerScript.setShowTrajectory(false);
         throwStartRot = playerObject.transform.rotation;
+        bool isTriggered = false;
         while (true)
         {
-            if (passedTimeTillThrow >= 300)
+
+            if (passedTimeTillThrow >= 300 && !isTriggered)
             {
-                GameManagerScript.setWeaponPulling();
+                GameManagerScript.triggerIdle();
+                isTriggered = true;
             }
-            if (passedTimeTillThrow >= 360f)
+            if (passedTimeTillThrow >= 360)
             {
-                GameManagerScript.enableCatch();
                 passedTimeTillThrow = 0f;
-                GameManagerScript.setShowTrajectory(true);
+                GameManagerScript.disableSpinning();
+                GameManagerScript.catchWeapon();
+                GameManagerScript.setShowTrajectory(false);
                 yield break;
             }
             else
@@ -70,25 +86,33 @@ public class WeaponScript : MonoBehaviour
             }
         }
     }
+
+    public Vector3 correctionVector;
     private Vector3 getPos(float time)
     {
         Vector3 result = calcPos(time);
 
-        result += new Vector3((-10) * axisMultiplier, 0, 0);
+        result += new Vector3((-10) * GameManagerScript.axisMultiplier, 0, 0);
         Quaternion rotatedVector = Quaternion.Euler(0, throwStartRot.eulerAngles.y + 90, 0);
         Vector3 direction = rotatedVector * result;
 
-        return direction;
+        return direction + correctionVector;
     }
     private Vector3 calcPos(float time)
     {
         time = time * Mathf.Deg2Rad;
         float zVal;
         zVal = Mathf.Sin(time);
-        for (int i = 0; i < tearDropSineMultiplier; i++)
+        for (int i = 0; i < GameManagerScript.tearDropSineMultiplier; i++)
         {
             zVal *= Mathf.Sin(time / 2);
         }
-        return new Vector3(Mathf.Cos(time) * axisMultiplier, 0.15f, zVal * axisMultiplier / 2) * 10;
+        return new Vector3(Mathf.Cos(time) * GameManagerScript.axisMultiplier, 0.15f, zVal * GameManagerScript.axisMultiplier / 2) * 10;
+    }
+
+    void OnTriggerEnter(Collider collider){
+        if(collider.gameObject.GetComponent<TreeCutScript>()!=null){
+
+        }
     }
 }
