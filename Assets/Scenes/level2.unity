@@ -188,6 +188,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3919149391087175760, guid: 3643c6b64a444fe44a378e4a66e954e5,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 5713094749550387045}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3643c6b64a444fe44a378e4a66e954e5, type: 3}
 --- !u!1 &255549704 stripped
@@ -282,6 +287,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3919149391087175760, guid: 3643c6b64a444fe44a378e4a66e954e5,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 5713094749550387045}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3643c6b64a444fe44a378e4a66e954e5, type: 3}
 --- !u!1001 &889333744
@@ -351,6 +361,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3919149391087175760, guid: 3643c6b64a444fe44a378e4a66e954e5,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 5713094749550387045}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3643c6b64a444fe44a378e4a66e954e5, type: 3}
 --- !u!4 &893390823 stripped
@@ -426,6 +441,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3919149391087175760, guid: 3643c6b64a444fe44a378e4a66e954e5,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 5713094749550387045}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3643c6b64a444fe44a378e4a66e954e5, type: 3}
 --- !u!1 &1669667845 stripped
@@ -466,21 +486,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4044268395773470801, guid: fb7f9fa9789ea564ab1d1350c2779f93,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 144054001d6ff1f4fbdf8e056f14335e, type: 2}
     - target: {fileID: 2661710578094715773, guid: fb7f9fa9789ea564ab1d1350c2779f93,
         type: 3}
       propertyPath: m_Name
       value: Template
+      objectReference: {fileID: 0}
+    - target: {fileID: 7752240576142100319, guid: fb7f9fa9789ea564ab1d1350c2779f93,
+        type: 3}
+      propertyPath: m_TagString
+      value: Weapon
       objectReference: {fileID: 0}
     - target: {fileID: 7257632613217501536, guid: fb7f9fa9789ea564ab1d1350c2779f93,
         type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 278a0e8933d4496448e60f5b3859912c, type: 2}
+    - target: {fileID: 4044268395773470801, guid: fb7f9fa9789ea564ab1d1350c2779f93,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 144054001d6ff1f4fbdf8e056f14335e, type: 2}
     - target: {fileID: 4544572159891214237, guid: fb7f9fa9789ea564ab1d1350c2779f93,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1086,11 +1111,6 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9818a7c56de3ce2478976208f29f21e5, type: 2}
-    - target: {fileID: 7752240576142100319, guid: fb7f9fa9789ea564ab1d1350c2779f93,
-        type: 3}
-      propertyPath: m_TagString
-      value: Weapon
-      objectReference: {fileID: 0}
     - target: {fileID: 2960799826660742218, guid: fb7f9fa9789ea564ab1d1350c2779f93,
         type: 3}
       propertyPath: m_TagString
@@ -1098,3 +1118,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb7f9fa9789ea564ab1d1350c2779f93, type: 3}
+--- !u!1 &5713094749550387045 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5713094749443813404, guid: fb7f9fa9789ea564ab1d1350c2779f93,
+    type: 3}
+  m_PrefabInstance: {fileID: 5713094749550387044}
+  m_PrefabAsset: {fileID: 0}
