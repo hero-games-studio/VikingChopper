@@ -91,7 +91,6 @@ public class GameManagerScript : MonoBehaviour
 
     public static void obstacleDestroyed()
     {
-        Debug.Log("obstacleDeleted");
         sceneManagerScript.addTreeCut();
         sceneManagerScript.checkSceneLoadCondition();
     }

@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using GameAnalyticsSDK;
 public class SceneManagerScript : MonoBehaviour
 {
     private int sceneCount;
@@ -16,6 +17,10 @@ public class SceneManagerScript : MonoBehaviour
     public GameObject spawnPoint2;
     void Start()
     {
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, SceneManager.GetActiveScene().buildIndex.ToString());
+
+        Debug.Log(SceneManager.GetActiveScene().buildIndex);
+
         GameManagerScript.isLevelFinished = false;
         sceneCount = SceneManager.sceneCountInBuildSettings;
         totalTreeCount = FindObjectsOfType<BaseObstacle>().Length;
@@ -32,6 +37,8 @@ public class SceneManagerScript : MonoBehaviour
             loadProcess();
             Invoke("InvokableReload", 2.5f);
         }
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, Application.version, SceneManager.GetActiveScene().buildIndex.ToString());
+
     }
 
     private void loadProcess()
@@ -51,7 +58,6 @@ public class SceneManagerScript : MonoBehaviour
 
     public void checkSceneLoadCondition()
     {
-        Debug.Log(cuttedTreeCount + "    " + totalTreeCount );
         if (cuttedTreeCount == totalTreeCount)
         {
             loadNextScene();
