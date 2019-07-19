@@ -18,6 +18,9 @@ public class CameraMovementScript : MonoBehaviour
     private Vector3 firstDownPosition;
 
     private Vector3 initialForward;
+    public float pullingDivider = 7.5f;
+    public float minimumAxisMultiplier = 0.25f;
+    public float maximumAxisMultiplier = 2.5f;
 
     void Start()
     {
@@ -28,7 +31,10 @@ public class CameraMovementScript : MonoBehaviour
     }
     void Update()
     {
-        mouseProcess();
+        // #if UNITY_EDITOR
+        // mouseProcess();
+        //  #endif
+        touchProcess();
     }
 
 
@@ -39,7 +45,6 @@ public class CameraMovementScript : MonoBehaviour
         PressIndicator.transform.position = getRaycastWorldPos();
         while (true)
         {
-            float deltaPosition = Vector3.Magnitude(firstDownPosition - getRaycastWorldPos());
 
 
             Vector3 subtraction = hit.point - firstDownPosition;
@@ -49,6 +54,7 @@ public class CameraMovementScript : MonoBehaviour
 
             if (GameManagerScript.hasWeapon)
             {
+                float deltaPosition = Vector3.Magnitude(firstDownPosition - getRaycastWorldPos());
                 GameManagerScript.axisMultiplier = Mathf.Clamp(deltaPosition / 10f, 0.25f, 2.5f);
             }
             yield return null;
@@ -92,28 +98,46 @@ public class CameraMovementScript : MonoBehaviour
     }
 
     //Touch controls
+    public bool wasTouched;
     private void touchProcess()
     {
-        if (Input.touchCount > 0)
+        if (!GameManagerScript.isLevelFinished)
         {
-            // GameManagerScript.changeShowTrajectory(true);
-            Touch touch = Input.GetTouch(0);
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Physics.Raycast(ray, out hit, 1000, 11);
-            if (touch.phase == TouchPhase.Began)
+            if (Input.touchCount > 0)
             {
-                firstDownPosition = hit.point;
+                wasTouched = true;
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began && GameManagerScript.hasWeapon)
+                {
+                    PressIndicator.transform.position = getRaycastWorldPos();
+                    GameManagerScript.triggerPulling();
+                    firstDownPosition = getRaycastWorldPos();
+                    GameManagerScript.setShowTrajectory(true);
+                }
+                Vector3 subtraction = hit.point - firstDownPosition;
+                float angle = Vector3.SignedAngle(subtraction, initialForward, Vector3.up);
+                playerObject.transform.eulerAngles = new Vector3(0, 90 - angle, 0);
+
+                if (GameManagerScript.hasWeapon)
+                {
+                    float deltaPosition = Vector3.Magnitude(firstDownPosition - getRaycastWorldPos());
+                    GameManagerScript.axisMultiplier = Mathf.Clamp(deltaPosition / pullingDivider, minimumAxisMultiplier, maximumAxisMultiplier);
+                }
             }
-            Vector3 subtraction = hit.point - firstDownPosition;
-            float angle = Vector3.SignedAngle(subtraction, playerObject.transform.forward, Vector3.up);
-            gameObject.transform.eulerAngles = new Vector3(0, 180 - angle, 0);
-
-            GameManagerScript.axisMultiplier = Mathf.Clamp(subtraction.magnitude, 2.5f, 7.5f);
-
-            float rot = calculateRotation(firstDownPosition, touch.position);
-            playerObject.transform.rotation = Quaternion.Euler(0, rot, 0);
+            else if (wasTouched && GameManagerScript.hasWeapon)
+            {
+                wasTouched = false;
+                GameManagerScript.triggerThrowing();
+                GameManagerScript.setShowTrajectory(false);
+                PressIndicator.transform.position = new Vector3(-100, 100, -100);
+            }
+            else if (wasTouched)
+            {
+                wasTouched = false;
+            }
         }
     }
+
 
     //Calculate 2d position difference for rotation
     private float calculateRotation(Vector2 beganPos, Vector2 currentPos)

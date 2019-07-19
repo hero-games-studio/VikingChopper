@@ -93,9 +93,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14181cc04fbb6674a95b78a93c7d7640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destructionParticle: {fileID: 100000, guid: 40f59a5c9ded7444fbb6769e02d1b1b9, type: 3}
+  destructionParticle: {fileID: 1892078723244562, guid: 46876a2780737ec45a19d62f88e5ce56,
+    type: 3}
   breakable: {fileID: 5163430456720340115, guid: 12b07fb8896167c44a4d7666ab5ab746,
     type: 3}
+  cam: {fileID: 0}
 --- !u!1 &3580749790130963717
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,6 +20,14 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField]
     private TrailRenderer trailRenderer;
 
+    public bool _hasWeapon;
+
+    void Update()
+    {
+        _hasWeapon = hasWeapon;
+    }
+
+
     //Camera controller script as static
     public static CameraMovementScript cameraMovementScript;
 
@@ -28,7 +36,8 @@ public class GameManagerScript : MonoBehaviour
     public static int tearDropSineMultiplier = 3;
     private static TrajectoryScript trajectory;
     public static float axisMultiplier = 1;
-    public static bool hasWeapon = true;
+    public static bool hasWeapon;
+    public static bool isLevelFinished=false;
     public static WeaponScript weaponScript;
     public static TrailRenderer weaponTrailRenderer;
     public static AnimationControllerScript animController;
@@ -80,8 +89,9 @@ public class GameManagerScript : MonoBehaviour
         animController.triggerIdle();
     }
 
-    public static void incrementCuttedTreeCount()
+    public static void obstacleDestroyed()
     {
+        Debug.Log("obstacleDeleted");
         sceneManagerScript.addTreeCut();
         sceneManagerScript.checkSceneLoadCondition();
     }

@@ -12,7 +12,7 @@ Material:
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -22,7 +22,7 @@ Material:
     m_TexEnvs: []
     m_Floats: []
     m_Colors:
-    - Color_46673C04: {r: 0.42119914, g: 0.8584906, b: 0.25511748, a: 0}
+    - Color_46673C04: {r: 1, g: 0, b: 0.28306055, a: 0}
     - Vector3_8B378526: {r: 0.23, g: 0.57, b: 0.09, a: 0}
 --- !u!114 &7690210642106916763
 MonoBehaviour:
