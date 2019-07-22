@@ -1,11 +1,12 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using GameAnalyticsSDK;
 public class SceneManagerScript : MonoBehaviour
 {
     public GameObject levelFinished;
     public GameObject[] confettiSpawnPoints;
-    
+
     [SerializeField]
     private GameObject confetti;
 
@@ -15,12 +16,16 @@ public class SceneManagerScript : MonoBehaviour
     private int sceneCount;
     void Start()
     {
-       GameManagerScript.isLevelFinished = false;
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, Application.version, SceneManager.GetActiveScene().buildIndex);
+
+        GameAnalytics.Initialize();
+        GameManagerScript.isLevelFinished = false;
         sceneCount = SceneManager.sceneCountInBuildSettings;
         totalTreeCount = FindObjectsOfType<BaseObstacle>().Length;
     }
     private void loadNextScene()
     {
+        GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, Application.version, SceneManager.GetActiveScene().buildIndex);
         if (SceneManager.GetActiveScene().buildIndex != sceneCount - 1)
         {
             loadProcess();
